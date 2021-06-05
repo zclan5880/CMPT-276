@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="./stylesheet.css" rel="stylesheet" type="text/css"/>
+
+
+</head>
+<body>
+
+
+
+    <div class="container">
+        <div class="black"></div>
+        <h2>Grade Calculator</h2>
+        <div class="b1">
+            <h3 class="red">Activities</h3>
+            <p>Give grades to the numeric activities</p>
+            <table border="1" cellpadding="0" cellspacing="0">
+                <tr class="row1">
+                    <th>Name</th>
+                    <th>Short Name</th>
+                    <th>Weight</th>
+                    <th>Grade</th>
+                    <th>Percent</th>
+                </tr>
+                <tr class="row2" id="a1">
+                    <td>Activity1</td>
+                    <td>A1</td>
+                    <td><input type="number" class="weight"  name="weight-a1" value="" /></td>
+                    <td><input type="number" class="numerator" name="numerator" value="" />/<br><input type="number" class="denominator"  name="denominator" value="" /></td>
+                    <td><span class="result"></span></td>
+                </tr>
+                <tr class="row2" id="a2">
+                    <td>Activity2</td>
+                    <td>A2</td>
+                    <td><input type="number" class="weight"  name="weight" value="" /></td>
+                    <td><input type="number" class="numerator" name="numerator" value="" />/<br><input type="number" class="denominator"  name="denominator" value="" /></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="row2" id="a3">
+                    <td>Activity3</td>
+                    <td>A3</td>
+                    <td><input type="number" class="weight"  name="weight" value="" /></td>
+                    <td><input type="number" class="numerator" name="numerator" value="" />/<br><input type="number" class="denominator"  name="denominator" value="" /></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="row2" id="a4">
+                    <td>Activity4</td>
+                    <td>A4</td>
+                    <td><input type="number" class="weight"  name="weight" value="" /></td>
+                    <td><input type="number" class="numerator" name="numerator" value="" />/<br><input type="number" class="denominator" name="denominator" value="" /></td>
+                    <td><span></span></td>
+                </tr>
+
+
+            </table>
+            <h5 class="red bold">Result</h5>
+            <div id="res"></div>
+            <div class="btns">
+                <input type="button" class="btn" value="WEIGHTED"  onclick="weight();"/>
+                <input type="button" class="btn" value="MEAN" onclick="mean();" />
+            </div>
+        </div>
+        <div class="black"></div>
+    </div>
+    <script>
+        function weight(){
+            //get Activities
+            var activities = get_activities();
+
+            //detetmine Activities exist or not
+            var num_of_activities = activities.length;
+            if (num_of_activities <=0 || num_of_activities == undefined){
+                alert('no activity;');
+                return false;
+            }
+            var grade = [];
+            var weight = [];
+            var total_weight = 0;
+            for(var i=0;i<num_of_activities;i++){
+                grade[i] = calc_grade(activities[i]);
+                if (grade[i]!==false){
+                    //grade test fine, then calculate weight
+                    weight[i] = get_weight(activities[i]);
+                    if (weight[i]===false){
+                        grade[i] = false;
+                    }
+                    total_weight += weight[i];
+                }
+            }
+
+            var total_grade = 0;
+            for (var i=0;i<num_of_activities;i++){
+                if (grade[i]!==false){
+                    total_grade += grade[i]*(weight[i]/total_weight);
+                }
+            }
+            document.getElementById('res').innerHTML =  Math.floor(total_grade.toFixed(2) * 100) + '%';
+
+
+        }
+
+        function get_activities(){
+            return document.getElementsByClassName('row2');
+        }
+
+        function calc_grade(activity){
+            var numerator = parseInt(activity.getElementsByClassName('numerator')[0].value); //numerator
+            var denominator = parseInt(activity.getElementsByClassName('denominator')[0].value); //denominator
+
+            if (numerator == undefined || numerator === '' || isNaN(numerator)|| numerator<0){
+                activity.getElementsByTagName('span')[0].innerHTML = 'Empty/Invalid Input';
+                return false;
+            }
+            if (denominator === undefined || denominator == '' || isNaN(denominator)|| denominator <= 0){
+                activity.getElementsByTagName('span')[0].innerHTML = 'Empty/Invalid Input';
+                return false;
+            }
+            var grade = (numerator / denominator).toFixed(2);
+            var int_grade = Math.floor(grade * 100)   ;
+
+            activity.getElementsByTagName('span')[0].innerHTML = int_grade + '%';
+            return grade;
+
+
+        }
+
+        function get_weight(activity){
+            var weight = activity.getElementsByClassName('weight')[0].value;
+            console.log(weight);
+            if (weight <=0 || weight == '' || weight == NaN || weight == undefined){
+                activity.getElementsByTagName('span')[0].innerHTML = 'Empty/Invalid Input';
+                return false;
+            }
+            return parseInt(weight);
+        }
+
+        function mean(){
+            //get Activities
+            var activities = get_activities();
+
+            //Activities exist or not
+            var num_of_activities = activities.length;
+            if (num_of_activities <=0 || num_of_activities == undefined){
+                alert('no activity;');
+                return false;
+            }
+            var grade = [];
+            var weight = [];
+            var total_weight = 0;
+            for(var i=0;i<num_of_activities;i++){
+                grade[i] = calc_grade(activities[i]);
+                
+                if (grade[i]!==false){
+                    //
+                    weight[i] = get_weight(activities[i]);
+                    if (weight[i]===false){
+                        grade[i] = false;
+                    }
+                    total_weight += weight[i];
+                }
+            }
+            var total_grade = 0;
+            var valid_activities = 0;
+            for (var i=0;i<num_of_activities;i++){
+                if (grade[i]!==false){
+                    total_grade += parseFloat(grade[i]);
+                    valid_activities++;
+                }
+            }
+            if (total_grade>0){
+                total_grade = total_grade / valid_activities;
+            }
+
+            document.getElementById('res').innerHTML =  Math.floor(total_grade.toFixed(2) * 100) + '%';
+        }
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="per.assignment.rectangle.mapper.RectangleMapper">
+
+    <resultMap id="BaseResultMap"  type="per.assignment.rectangle.mapper.RectangleMapper" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name"  jdbcType="VARCHAR" />
+        <result column="width" property="width"  jdbcType="FLOAT" />
+        <result column="height" property="height"  jdbcType="FLOAT" />
+        <result column="color" property="color"  jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="findAll" resultType="rectangle">
+        select * from t_rectangle
+    </select>
+
+    <select id="findById" resultType="rectangle">
+        select * from t_rectangle where id=#{rectangle.id}
+    </select>
+
+    <insert id="insertRectangle">
+        insert into t_rectangle(name,width,height,color) values (#{rectangle.name}, #{rectangle.width}, #{rectangle.height}, #{rectangle.color})
+    </insert>
+
+    <update id="updateRectangle">
+        update t_rectangle set name=#{rectangle.name}, width=#{rectangle.width}, height=#{rectangle.height}, color=#{rectangle.color} where id=#{rectangle.id}
+    </update>
+    <delete id="deleteRectangle">
+        delete from t_rectangle where id=#{rectangle.id}
+    </delete>
+</mapper>
